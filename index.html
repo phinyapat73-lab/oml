@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>ยังงงจุรรรร</title>
+	<style>
+		:root {
+			--ink: #422b35;
+			--muted: #80636e;
+			--rose: #d85f7b;
+			--rose-dark: #b83e60;
+			--cream: #fff8f2;
+			--line: #f0d9dc;
+		}
+		* { box-sizing: border-box; }
+		body {
+			min-height: 100vh;
+			margin: 0;
+			display: grid;
+			place-items: center;
+			padding: 24px;
+			color: var(--ink);
+			font-family: Georgia, "Times New Roman", serif;
+			background: #f8d9d7;
+			background-image: radial-gradient(#ffffff80 1px, transparent 1px), linear-gradient(135deg, #f9dcd5, #eeb8c5);
+			background-size: 22px 22px, 100% 100%;
+		}
+		.card {
+			width: min(100%, 460px);
+			overflow: hidden;
+			text-align: center;
+			background: var(--cream);
+			border: 1px solid #ffffffb8;
+			border-radius: 18px;
+			box-shadow: 0 22px 60px #963d552b;
+		}
+		.top { padding: 44px 30px 34px; }
+		.heart { color: var(--rose); font-size: 56px; line-height: 1; animation: beat 1.5s infinite; }
+		h1 { margin: 18px 0 10px; font-size: clamp(28px, 8vw, 42px); font-weight: 400; }
+		p { color: var(--muted); font-size: 17px; line-height: 1.7; }
+		button {
+			margin-top: 18px;
+			padding: 14px 26px;
+			color: white;
+			font: inherit;
+			font-size: 17px;
+			cursor: pointer;
+			border: 0;
+			border-radius: 999px;
+			background: var(--rose);
+			box-shadow: 0 8px 18px #d85f7b45;
+		}
+		button:hover { background: var(--rose-dark); }
+		.hidden { display: none; }
+		.pin-box { padding: 8px 30px 38px; }
+		label { display: block; margin-bottom: 10px; color: var(--muted); font-size: 16px; }
+		input {
+			width: 160px;
+			padding: 12px;
+			color: var(--ink);
+			text-align: center;
+			font: inherit;
+			font-size: 24px;
+			letter-spacing: 8px;
+			border: 1px solid var(--line);
+			border-radius: 10px;
+			outline: none;
+			background: white;
+		}
+		input:focus { border-color: var(--rose); box-shadow: 0 0 0 3px #d85f7b22; }
+		.error { min-height: 24px; margin: 12px 0 0; color: #c0445d; font-size: 14px; }
+		.letter { padding: 40px 30px 44px; }
+		.letter h2 { margin: 0 0 20px; font-size: 32px; font-weight: 400; color: var(--rose-dark); }
+		.letter p { margin: 10px 0; }
+		.signature { margin-top: 26px; color: var(--rose-dark); font-size: 22px; font-style: italic; }
+		@keyframes beat {
+			0%, 100% { transform: scale(1); }
+			12% { transform: scale(1.12); }
+			24% { transform: scale(1); }
+		}
+	</style>
+</head>
+<body>
+	<main class="card">
+		<section id="welcome" class="top">
+			<div class="heart" aria-hidden="true">♥</div>
+			<h1>คือด้ามีเรื่องงจาบออกก</h1>
+			<p>คือเป้รเรื่องใหญ่สำคันมากๆๆๆ<br>รีบเปิดดุววววเร้ววว</p>
+			<button id="openButton" type="button">กดเปิดจดหมาย</button>
+		</section>
+		<section id="pinPanel" class="pin-box hidden">
+			<h2>ใส่รหัสลับ</h2>
+			<label for="pin">รหัส 4 หลักของเรา</label>
+			<input id="pin" type="password" inputmode="numeric" maxlength="4" autocomplete="off" aria-describedby="error">
+			<p id="error" class="error" role="alert"></p>
+			<button id="unlockButton" type="button">เปิดข้อความ</button>
+		</section>
+		<section id="letter" class="letter hidden">
+			<div class="heart" aria-hidden="true">♥</div>
+			<h2>มีเรื่องไม่สบายจัยอ้ะป่าวว</h2>
+			<p>ถ้ามีเรื่องไรไม่สบายใจก้มาเล่าหรือระบายกะด้าได้นะรับฟังฉะเหม๋ออ</p>
+			<p>ด้าาอยุ่ตรงนี้้ยุข้างๆฉะเหม๋อออ</p>
+			<p></p>
+			<div class="signature">มีคนคอยอวยพรหั้ยพี่มีความสุขในทุกวันยน้ะะ</div>
+		</section>
+	</main>
+	<script>
+		const secretCode = "1702";
+		const openButton = document.getElementById("openButton");
+		const unlockButton = document.getElementById("unlockButton");
+		const pin = document.getElementById("pin");
+		const error = document.getElementById("error");
+		openButton.addEventListener("click", () => {
+			document.getElementById("welcome").classList.add("hidden");
+			document.getElementById("pinPanel").classList.remove("hidden");
+			pin.focus();
+		});
+		function unlockLetter() {
+			if (pin.value === secretCode) {
+				document.getElementById("pinPanel").classList.add("hidden");
+				document.getElementById("letter").classList.remove("hidden");
+				return;
+			}
+			error.textContent = "รหัสยังไม่ถูกต้อง ลองใหม่อีกครั้งนะ";
+			pin.value = "";
+			pin.focus();
+		}
+		unlockButton.addEventListener("click", unlockLetter);
+		pin.addEventListener("keydown", (event) => {
+			if (event.key === "Enter") unlockLetter();
+		});
+	</script>
+</body>
+</html>
